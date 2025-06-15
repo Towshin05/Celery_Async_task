@@ -1,7 +1,6 @@
 import os
 from celery import Celery
 
-
 # Create Celery instance
 app = Celery('tasks')
 
@@ -22,17 +21,31 @@ app.conf.update(
     result_expires=3600,  # 1 hour
 )
 
-# Since task_definitions.py is in the same directory, use relative import
-app.autodiscover_tasks(['worker.tasks.task_definitions'])
+# Import tasks directly instead of using autodiscovery
+# This ensures all tasks are registered when the app starts
+from worker.tasks.task_definitions import (
+    add_numbers,
+    process_data,
+    send_email,
+    long_running_task,
+    failing_task,
+    batch_process
+)
+
+# Manually register tasks (optional - importing them is usually enough)
+app.register_task(add_numbers)
+app.register_task(process_data)
+app.register_task(send_email)
+app.register_task(long_running_task)
+app.register_task(failing_task)
+app.register_task(batch_process)
+
+# Debug: Print registered tasks when module is loaded
+print("=== Registered Tasks ===")
+for task_name in app.tasks.keys():
+    if not task_name.startswith('celery.'):  # Skip built-in celery tasks
+        print(f"Task: {task_name}")
+print("========================")
 
 if __name__ == '__main__':
     app.start()
-# try:
-#     print("✓ task_definitions imported successfully")
-# except ImportError as e:
-#     print(f"✗ Failed to import task_definitions: {e}")
-#     print(f"Current directory: {os.getcwd()}")
-#     print(f"Files available: {os.listdir('.')}")
-
-# if __name__ == '__main__':
-#     app.start()

@@ -1,8 +1,9 @@
 import time
 import random
 from celery import current_task
+
+# Import the app instance from celery_app
 from celery_app import app
-# from celery_app import app
 
 @app.task(bind=True)
 def add_numbers(self, a, b):
@@ -140,10 +141,3 @@ def batch_process(self, items):
         }
     except Exception as exc:
         self.retry(exc=exc, countdown=60, max_retries=3)
-
-# Debug: Print registered tasks when module is loaded
-print("=== Registered Tasks ===")
-for task_name in app.tasks.keys():
-    if not task_name.startswith('celery.'):  # Skip built-in celery tasks
-        print(f"Task: {task_name}")
-print("========================")

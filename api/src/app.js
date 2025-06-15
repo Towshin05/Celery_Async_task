@@ -105,7 +105,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
-const taskRoutes = require('./routes/taskRoutes');
+const taskRoutes = require('./src/routes/taskRoutes');
 const errorHandler = require('./middleware/errorHandler');
 const logger = require('./utils/logger');
 
