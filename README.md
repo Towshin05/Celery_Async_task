@@ -1,4 +1,5 @@
-# Project Description
+
+# Async Task Processing System 
 This is a hybrid task queue system built using Node.js for the API layer and Celery (Python) for background asynchronous task processing. It is designed to handle computational or I/O-heavy jobs off the main request/response lifecycle using a microservice-based architecture with message brokering and containerized deployment via Docker and Docker Compose.
 
 1. **Nodejs**
@@ -113,9 +114,9 @@ Default credentials: guest/guest
 
 
 ## Poridhi Lab Setup
-1. Access the application through load balancer:
-At first we load the system following the instructions as in local machine and checking if all the ports are forwarded.
+1. Create load balancer and configure with your application's IP and port in Poridhi lab:
 ![image](./images/load.png)
+
 
 2. Configure IP and port:
 - Get IP from eth0 using `ifconfig`
@@ -128,10 +129,10 @@ At first we load the system following the instructions as in local machine and c
 
 
 
-3. Create load balancer and configure with your application's IP and port in Poridhi lab:
-
+3. Access the application through load balancer:
+At first we load the system following the instructions as in local machine and checking if all the ports are forwarded.
 <div align="center">
   <img src="images/port.png" alt="Screenshot 2025-06-03 155900" width="600">
 </div>
 
-![image](https://github.com/user-attachments/assets/f7786750-1b00-4e37-86a1-34744d5b7cb4)
+
