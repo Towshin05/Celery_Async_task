@@ -248,7 +248,7 @@ exports.flower = createInstance("flower", "flower", [5555]);
 
 ```
 
-### Create EC2 Key Pair (.pem) File
+## Create EC2 Key Pair (.pem) File
 1. Go to Ec2 through search bar
 2. Launch instances.
 3. Give a name in the field **Name and tag** 
@@ -257,7 +257,7 @@ exports.flower = createInstance("flower", "flower", [5555]);
 
 ![image](./images/ec2.png)
 
-1. # For Linux/macOS
+1.  For Linux/macOS
 ```bash
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
@@ -286,4 +286,9 @@ aws sts get-caller-identity
  
 ``` bash
 pulumi up
+```
+5. Termination
+
+```bash
+pulumi destroy
 ```
