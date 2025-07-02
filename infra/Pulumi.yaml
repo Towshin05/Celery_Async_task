@@ -1,0 +1,11 @@
+name: aws-infra
+description: Aws deployment using ec2 instance with pulumi
+runtime:
+  name: nodejs
+  options:
+    typescript: false
+    packagemanager: pnpm
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-javascript

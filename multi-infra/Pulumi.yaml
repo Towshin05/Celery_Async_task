@@ -1,0 +1,11 @@
+name: multi-infra
+description: a pulumi program
+runtime:
+  name: nodejs
+  options:
+    typescript: false
+    packagemanager: pnpm
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-javascript
