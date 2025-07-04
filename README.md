@@ -135,6 +135,145 @@ At first we load the system following the instructions as in local machine and c
   <img src="images/port.png" alt="Screenshot 2025-06-03 155900" width="600">
 </div>
 
+# Asynchronous Task Processing System using Pulumi-AWS Single-EC2 Deployment.
+## Project Overview
+The objective of this project is to develop a scalable, asynchronous task management system using Node.js, Celery, RabbitMQ, Flower, and Redis. The system will allow for the execution of background tasks in an asynchronous manner, with real-time monitoring, task queuing, and persistent storage of task results.
+## Project Structure
+```bash
+infra/
+├── node_modules
+├── .gitignore
+├── pnpm-lock.yaml
+├── index.js               # Pulumi AWS EC2 provision code
+├── Pulumi.yaml
+├── Pulumi.dev.yaml
+└── .env                   # optional: environment variables
+```
+## Prerequisites
+- AWS CLI configured
+- Pulumi CLI installed
+- Docker & Docker Compose installed
+- A valid AWS EC2 key pair (e.g., key-pair-multi)
+- Pulumi account set up (pulumi login)
+- Docker Running
+
+```bash
+#Nodejs 
+sudo apt update
+sudo apt install nodejs
+sudo apt install npm
+
+#Python and celery
+sudo apt update
+sudo apt install python3 python3-pip
+pip3 install celery
+ #Redis
+sudo apt update
+sudo apt install redis-server
+
+```
+
+1. At First from the lab generate the Credentials get the access ID and Secret keys.
+![image](./images/cred.png)
+
+2. AWS Configuration from the terminal:
+![image](./images/aws.png)
+
+3. Initialize Pulumi Project
+```bash
+cd infra
+pulumi new aws-javascript
+pulumi config set aws:region ap-southeast-1
+```
+**Respond to prompts:**
+
+Project name: infra
+Stack: dev (can create your new stack with name of desired)
+AWS region: ap-southeast-1
+json: json
+
+4. The **index.js** file:
+**key-name.pem** must be present in the working folder.
+```bash
+const aws = require("@pulumi/aws");
+
+const keyName = "single-key"; // Your EC2 key pair name (NOT .pem file)
+
+const sg = new aws.ec2.SecurityGroup("flask-sg", {
+    description: "Allow SSH and Flask port",
+    ingress: [
+        { protocol: "tcp", fromPort: 22, toPort: 22, cidrBlocks: ["0.0.0.0/0"] },    // SSH
+        { protocol: "tcp", fromPort: 5000, toPort: 5000, cidrBlocks: ["0.0.0.0/0"] } // Flask
+    ],
+    egress: [
+        { protocol: "-1", fromPort: 0, toPort: 0, cidrBlocks: ["0.0.0.0/0"] }
+    ]
+});
+
+const ami = aws.ec2.getAmi({
+    filters: [
+        { name: "name", values: ["amzn2-ami-hvm-*-x86_64-gp2"] },
+        { name: "virtualization-type", values: ["hvm"] }
+    ],
+    owners: ["137112412989"],
+    mostRecent: true
+});
+
+const server = ami.then(image => new aws.ec2.Instance("flask-ec2", {
+    instanceType: "t2.micro",
+    ami: image.id,
+    keyName: keyName,
+    vpcSecurityGroupIds: [sg.id],
+    userData: `#!/bin/bash
+yum update -y
+yum install -y docker git
+systemctl start docker
+usermod -aG docker ec2-user
+cd /home/ec2-user
+git clone https://github.com/Towshin05/Celery_Async_task.git
+cd Celery_Async_task
+docker-compose --profile flask up -d
+`,
+    tags: { Name: "flask-ec2" }
+}));
+
+exports.publicIp = server.then(instance => instance.publicIp);
+exports.publicDns = server.then(instance => instance.publicDns);
+
+
+```
+
+5. Run the pulumi project
+```bash
+pulumi up
+```
+![image](./images/pulumi.png)
+
+6. SSH Into EC2 and Set Up Dockerized Project
+```bash
+
+ssh -i ~/.ssh/single-key.pem ec2-user@<public-ip>
+```
+![image](./images/ec22.png)
+7. Install Docker Compose v2
+```bash
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.7/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+#make it executable
+sudo chmod +x /usr/local/bin/docker-compose
+#verify
+docker-compose version
+
+```
+8. Start the app
+```bash
+docker-compose up -d
+#to check
+docker ps
+```
+9. Clear 
+```bash
+pulumi destroy
+```
 
 # Asynchronous Task Processing System using Pulumi-AWS Multi-EC2 Deployment.
  ## Project Overview
