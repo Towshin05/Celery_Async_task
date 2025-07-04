@@ -167,7 +167,7 @@ sudo apt install npm
 sudo apt update
 sudo apt install python3 python3-pip
 pip3 install celery
- #Redis
+#Redis
 sudo apt update
 sudo apt install redis-server
 
@@ -187,10 +187,10 @@ pulumi config set aws:region ap-southeast-1
 ```
 **Respond to prompts:**
 
-Project name: infra
-Stack: dev (can create your new stack with name of desired)
-AWS region: ap-southeast-1
-json: json
+- Project name: infra
+- Stack: dev (can create your new stack with name of desired)
+- AWS region: ap-southeast-1
+- json: json
 
 4. The **index.js** file:
 **key-name.pem** must be present in the working folder.
@@ -255,6 +255,9 @@ pulumi up
 ssh -i ~/.ssh/single-key.pem ec2-user@<public-ip>
 ```
 ![image](./images/ec22.png)
+
+
+
 7. Install Docker Compose v2
 ```bash
 sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.7/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
