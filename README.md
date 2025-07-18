@@ -45,7 +45,8 @@ CELERY-NODEJS/
 ├── .gitignore
 └── README.md                   # Project overview and usage docs
 ```
-
+# Project Architecture
+![image](./images/2.drawio.svg)
 # Set-up Instructions
 1. **Clone the repo**
 ```bash
